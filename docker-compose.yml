@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7-alpine
+    container_name: snip-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: snip
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - snip-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./snip-backend
+      dockerfile: Dockerfile
+    container_name: snip-backend
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGODB_URI: mongodb://${MONGO_USER:-root}:${MONGO_PASSWORD:-password}@mongodb:27017/snip?authSource=admin
+      JWT_SECRET: ${JWT_SECRET:-snip_super_secret_key_change_in_production}
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - snip-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend App
+  frontend:
+    build:
+      context: ./snip-frontend-main/snip-frontend-main
+      dockerfile: Dockerfile
+    container_name: snip-frontend
+    ports:
+      - "80:80"
+    environment:
+      VITE_BACKEND_URL: http://backend:3000
+    depends_on:
+      - backend
+    networks:
+      - snip-network
+    restart: unless-stopped
+
+networks:
+  snip-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
