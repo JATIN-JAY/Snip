@@ -207,7 +207,6 @@ export default function Dashboard() {
               <LinkCard 
                 key={link._id} 
                 link={link} 
-                currentHost={currentHost}
                 copiedLink={copiedLink}
                 onCopy={copyToClipboard}
                 onEdit={(data) => { setEditData(data); setIsEditModalOpen(true); }}
