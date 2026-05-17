@@ -20,6 +20,11 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/links', linkRoutes);
 
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Server is running' });
+});
+
 // Redirect route - redirect and track clicks
 app.get('/:shortId', async (req, res) => {
   try {
