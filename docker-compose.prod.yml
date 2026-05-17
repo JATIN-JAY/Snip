@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7-alpine
+    container_name: snip-mongodb-prod
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: snip
+    volumes:
+      - mongodb_data_prod:/data/db
+    networks:
+      - snip-network-prod
+    restart: always
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    image: jatin-jay/snip-backend:latest
+    container_name: snip-backend-prod
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGODB_URI: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongodb:27017/snip?authSource=admin
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - snip-network-prod
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend App
+  frontend:
+    image: jatin-jay/snip-frontend:latest
+    container_name: snip-frontend-prod
+    ports:
+      - "80:80"
+    environment:
+      VITE_BACKEND_URL: http://YOUR_DOMAIN_HERE.com:3000
+    depends_on:
+      - backend
+    networks:
+      - snip-network-prod
+    restart: always
+
+networks:
+  snip-network-prod:
+    driver: bridge
+
+volumes:
+  mongodb_data_prod:
+    driver: local
