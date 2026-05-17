@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import toast from "react-hot-toast";
+import { HTTP_BACKEND } from "../../config";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
 import { DashboardStats } from "../components/dashboard/DashboardStats";
 import { LinkCard } from "../components/dashboard/LinkCard";
@@ -14,8 +15,7 @@ import { DeleteLinkModal } from "../components/modals/DeleteLinkModal";
 import { QrModal } from "../components/modals/QrModal";
 
 export default function Dashboard() {
-  const navigate = useNavigate();
-  const currentHost = window.location.host; 
+  const navigate = useNavigate(); 
 
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -121,7 +121,7 @@ export default function Dashboard() {
   }
 
   const copyToClipboard = (shortId) => {
-    navigator.clipboard.writeText(`${window.location.origin}/${shortId}`);
+    navigator.clipboard.writeText(`${HTTP_BACKEND}/${shortId}`);
     setCopiedLink(shortId);
     toast.success("Link copied!");
     setTimeout(() => setCopiedLink(null), 2000);

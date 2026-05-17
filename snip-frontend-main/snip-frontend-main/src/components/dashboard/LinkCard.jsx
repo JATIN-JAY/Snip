@@ -2,6 +2,7 @@ import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { BarChart2, Edit, QrCode, Trash2, Copy, Check, Calendar, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { HTTP_BACKEND } from "../../config";
 
 export function LinkCard({ link, copiedLink, onCopy, onEdit, onDelete, onQr }) {
   const navigate = useNavigate();
@@ -11,8 +12,7 @@ export function LinkCard({ link, copiedLink, onCopy, onEdit, onDelete, onQr }) {
     : "Just now";
 
   const formattedClicks = new Intl.NumberFormat("en-US").format(link.clicks || 0);
-  const displayOrigin = window.location.origin;
-  const displayHost = window.location.host;
+  const shortLinkUrl = `${HTTP_BACKEND}/${link.shortId}`;
 
   return (
     <div className="group relative bg-white border border-slate-200 rounded-2xl transition-all duration-200 hover:shadow-md hover:border-slate-300 hover:-translate-y-[1px] overflow-hidden">
@@ -45,12 +45,12 @@ export function LinkCard({ link, copiedLink, onCopy, onEdit, onDelete, onQr }) {
           <div className="flex items-center gap-2.5 w-fit">
             <div className="flex items-center gap-2 bg-orange-50 border border-orange-100 px-3 py-1.5 rounded-lg">
               <a
-                href={`${displayOrigin}/${link.shortId}`}
+                href={shortLinkUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-orange-600 font-bold text-[13px] hover:underline transition-colors"
               >
-                {displayHost}/{link.shortId}
+                {HTTP_BACKEND.replace(/^http:\/\//, '')}/{link.shortId}
               </a>
               <div className="h-3.5 w-px bg-orange-200" />
               <button

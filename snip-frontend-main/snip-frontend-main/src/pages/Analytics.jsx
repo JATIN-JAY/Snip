@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../lib/api";
+import { HTTP_BACKEND } from "../../config";
 import { DashboardHeader } from "../components/dashboard/DashboardHeader";
 import { Button } from "../components/ui/button";
 import {
@@ -176,13 +177,13 @@ export default function Analytics() {
             </div>
 
             <a
-              href={`${window.location.origin}/${link.shortId}`}
+              href={`${HTTP_BACKEND}/${link.shortId}`}
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-2 bg-orange-600/20 border border-orange-500/30 text-orange-400 hover:text-orange-300 px-3 py-1.5 rounded-xl text-[13px] font-bold shrink-0 transition-colors"
             >
               <LinkIcon className="w-3.5 h-3.5" />
-              {window.location.host}/{link.shortId}
+              {HTTP_BACKEND.replace(/^http:\/\//, '')}/{link.shortId}
               <ExternalLink className="w-3 h-3" />
             </a>
           </div>
