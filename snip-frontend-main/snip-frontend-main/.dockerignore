@@ -11,5 +11,3 @@ build
 *.log
 .vscode
 .idea
-src/
-public/
