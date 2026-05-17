@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   # MongoDB Database
   mongodb:
-    image: mongo:7-alpine
+    image: mongo:latest
     container_name: snip-mongodb-prod
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
