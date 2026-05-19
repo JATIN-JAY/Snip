@@ -37,7 +37,13 @@ pipeline {
                     sh 'docker rm snip-backend || true'
                     sh 'docker stop snip-frontend || true'
                     sh 'docker rm snip-frontend || true'
-                    sh "docker run -d -p 3000:3000 --name snip-backend -e PORT=3000 -e MONGODB_URI=${MONGODB_URI} -e JWT_SECRET=${JWT_SECRET} snip-backend:latest"
+                    sh '''
+                        docker run -d -p 3000:3000 --name snip-backend \
+                        -e PORT=3000 \
+                        -e MONGODB_URI="$MONGODB_URI" \
+                        -e JWT_SECRET="$JWT_SECRET" \
+                        snip-backend:latest
+                    '''
                     sh 'docker run -d -p 80:80 --name snip-frontend snip-frontend:latest'
                 }
             }
