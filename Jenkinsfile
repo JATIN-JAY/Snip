@@ -21,7 +21,7 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 echo 'Building frontend image...'
-                dir('snip-frontend-main') {
+                dir('snip-frontend-main/snip-frontend-main') {
                     sh 'docker build -t snip-frontend:latest .'
                 }
             }
