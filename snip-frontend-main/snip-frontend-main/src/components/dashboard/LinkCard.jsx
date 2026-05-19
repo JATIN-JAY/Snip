@@ -2,7 +2,7 @@ import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { BarChart2, Edit, QrCode, Trash2, Copy, Check, Calendar, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { HTTP_BACKEND } from "../../config";
+import { HTTP_BACKEND } from "../../../config";
 
 export function LinkCard({ link, copiedLink, onCopy, onEdit, onDelete, onQr }) {
   const navigate = useNavigate();
