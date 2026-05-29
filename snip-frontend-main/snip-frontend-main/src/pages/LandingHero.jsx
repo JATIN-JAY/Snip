@@ -42,7 +42,7 @@ export function LandingHero() {
   
       <section className="max-w-4xl mx-auto px-6 text-center flex flex-col items-center pt-16 mb-24 relative z-10">
         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-6 leading-[1.1] text-slate-900">
-          Fast links.
+          Jatin Singh.
           <br />
           <span className="text-slate-900">Real analytics.</span>
           <br />
